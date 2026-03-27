@@ -532,12 +532,28 @@ body[data-page="accounts"][data-account-tier="premiere"] .hero-card::before {
     linear-gradient(90deg, rgba(8, 10, 15, 0.92) 0%, rgba(8, 10, 15, 0.76) 34%, rgba(8, 10, 15, 0.34) 56%, rgba(8, 10, 15, 0.2) 70%, rgba(8, 10, 15, 0.5) 100%),
     linear-gradient(180deg, rgba(7, 9, 14, 0.28) 0%, rgba(7, 9, 14, 0.18) 58%, rgba(7, 9, 14, 0.58) 100%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 56%),
-    radial-gradient(circle at 80% 18%, rgba(250, 204, 21, 0.18), transparent 24%),
     linear-gradient(132deg, transparent 0 40%, rgba(255, 255, 255, 0.12) 40% 43%, transparent 43% 54%, rgba(255, 255, 255, 0.08) 54% 57%, transparent 57%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 30px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 26px),
-    var(--account-hero-image) right 28px center / auto 88% no-repeat;
-  opacity: 0.84;
+    var(--account-hero-image) right 0 center / auto 100% no-repeat;
+  opacity: 0.96;
+}
+
+body[data-page="accounts"][data-account-tier="standard"] .hero-card,
+body[data-page="accounts"][data-account-tier="pro"] .hero-card,
+body[data-page="accounts"][data-account-tier="premiere"] .hero-card {
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+    #0e1119;
+}
+
+body[data-page="accounts"][data-account-tier="standard"] .chart-glow,
+body[data-page="accounts"][data-account-tier="pro"] .chart-glow,
+body[data-page="accounts"][data-account-tier="premiere"] .chart-glow,
+body[data-page="accounts"][data-account-tier="standard"] .chart-line,
+body[data-page="accounts"][data-account-tier="pro"] .chart-line,
+body[data-page="accounts"][data-account-tier="premiere"] .chart-line {
+  display: none;
 }
 
 body[data-page="accounts"][data-account-tier="standard"] .hero-card::after,
