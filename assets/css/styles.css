@@ -333,13 +333,13 @@ body[data-page="home"] .section {
 
 .hero-card {
   --asset-label: "Hero image placeholder";
-  --placeholder-tint: rgba(255, 138, 0, 0.22);
+  --placeholder-tint: rgba(255, 138, 0, 0.05);
   position: relative;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   background:
     linear-gradient(100deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
-    radial-gradient(circle at 80% 15%, rgba(255, 138, 0, 0.25), transparent 36%),
+    radial-gradient(circle at 80% 15%, rgba(255, 138, 0, 0.05), transparent 36%),
     #0d1017;
   padding: 52px;
   overflow: hidden;
@@ -367,7 +367,7 @@ body[data-page="home"] .section {
 
 body[data-page="home"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(255, 138, 0, 0.28);
+  --placeholder-tint: rgba(255, 138, 0, 0.06);
 }
 
 body[data-page="home"] .hero-card::before {
@@ -384,7 +384,7 @@ body[data-page="home"] .hero-card::after {
 
 body[data-page="forex"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(128, 255, 150, 0.18);
+  --placeholder-tint: rgba(128, 255, 150, 0.05);
 }
 
 body[data-page="forex"] .hero-card::before {
@@ -401,7 +401,7 @@ body[data-page="forex"] .hero-card::after {
 
 body[data-page="commodities"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(255, 188, 61, 0.2);
+  --placeholder-tint: rgba(255, 188, 61, 0.05);
 }
 
 body[data-page="commodities"] .hero-card::before {
@@ -418,7 +418,7 @@ body[data-page="commodities"] .hero-card::after {
 
 body[data-page="stocks"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(111, 184, 255, 0.2);
+  --placeholder-tint: rgba(111, 184, 255, 0.05);
 }
 
 body[data-page="stocks"] .hero-card::before {
@@ -435,7 +435,7 @@ body[data-page="stocks"] .hero-card::after {
 
 body[data-page="indices"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(147, 197, 253, 0.18);
+  --placeholder-tint: rgba(147, 197, 253, 0.05);
 }
 
 body[data-page="indices"] .hero-card::before {
@@ -452,7 +452,7 @@ body[data-page="indices"] .hero-card::after {
 
 body[data-page="crypto"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(99, 102, 241, 0.22);
+  --placeholder-tint: rgba(99, 102, 241, 0.06);
 }
 
 body[data-page="crypto"] .hero-card::before {
@@ -469,7 +469,7 @@ body[data-page="crypto"] .hero-card::after {
 
 body[data-page="platform"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(56, 189, 248, 0.2);
+  --placeholder-tint: rgba(56, 189, 248, 0.05);
 }
 
 body[data-page="platform"] .hero-card::before {
@@ -486,7 +486,7 @@ body[data-page="platform"] .hero-card::after {
 
 body[data-page="copy-trading"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(244, 114, 182, 0.2);
+  --placeholder-tint: rgba(244, 114, 182, 0.05);
 }
 
 body[data-page="copy-trading"] .hero-card::before {
@@ -503,7 +503,7 @@ body[data-page="copy-trading"] .hero-card::after {
 
 body[data-page="accounts"] .hero-card {
   --asset-label: "Account hero placeholder";
-  --placeholder-tint: rgba(250, 204, 21, 0.18);
+  --placeholder-tint: rgba(250, 204, 21, 0.05);
   --account-hero-image: none;
 }
 
@@ -548,7 +548,7 @@ body[data-page="accounts"][data-account-tier="premiere"] .hero-card::after {
 
 body[data-page="contact"] .hero-card {
   --asset-label: "";
-  --placeholder-tint: rgba(45, 212, 191, 0.18);
+  --placeholder-tint: rgba(45, 212, 191, 0.05);
 }
 
 body[data-page="contact"] .hero-card::before {
@@ -628,9 +628,6 @@ body:not([data-page="home"]) .chart-line {
   height: 42%;
   border-radius: 10px;
   opacity: 0.85;
-  background:
-    linear-gradient(130deg, transparent 15%, rgba(255, 145, 27, 0.75) 40%, transparent 68%),
-    linear-gradient(150deg, transparent 20%, rgba(255, 201, 112, 0.9) 50%, transparent 80%);
   filter: blur(2px);
   z-index: 1;
 }
@@ -1188,6 +1185,16 @@ body:not([data-page="home"]) .section-lined::after {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(160deg, #11141c, #0c0f15);
   padding: 24px;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.plan:hover {
+  border-color: rgba(255, 138, 0, 0.5);
+  background:
+    linear-gradient(165deg, rgba(255, 168, 64, 0.14), rgba(255, 138, 0, 0.06) 34%, rgba(12, 15, 21, 0.98) 72%),
+    linear-gradient(160deg, #17110b, #0c0f15 72%);
+  box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.2), 0 0 40px rgba(255, 138, 0, 0.12);
+  transform: translateY(-4px);
 }
 
 .plan > * {
@@ -1215,16 +1222,7 @@ body:not([data-page="home"]) .section-lined::after {
   font-weight: 800;
 }
 
-.plan.featured {
-  border-color: var(--brand);
-  background:
-    linear-gradient(165deg, rgba(255, 168, 64, 0.16), rgba(255, 138, 0, 0.08) 34%, rgba(12, 15, 21, 0.98) 72%),
-    linear-gradient(160deg, #17110b, #0c0f15 72%);
-  box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.38), 0 0 60px rgba(255, 138, 0, 0.25);
-  transform: translateY(-6px);
-}
-
-.plan.featured::before {
+.plan::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -1233,10 +1231,15 @@ body:not([data-page="home"]) .section-lined::after {
     linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 34%),
     repeating-linear-gradient(135deg, rgba(255, 188, 61, 0.14) 0 2px, transparent 2px 14px),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 24px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.plan:hover::before {
   opacity: 0.95;
 }
 
-.plan.featured::after {
+.plan::after {
   content: "";
   position: absolute;
   inset: 1px;
@@ -1245,7 +1248,22 @@ body:not([data-page="home"]) .section-lined::after {
     linear-gradient(180deg, rgba(255, 210, 146, 0.08), transparent 22%),
     radial-gradient(circle at 84% 22%, rgba(255, 138, 0, 0.24), transparent 30%),
     linear-gradient(110deg, transparent 0 56%, rgba(255, 166, 0, 0.08) 56% 64%, transparent 64%);
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.plan:hover::after {
+  opacity: 1;
+}
+
+.plan.featured:hover {
+  border-color: var(--brand);
+  background:
+    linear-gradient(165deg, rgba(255, 168, 64, 0.16), rgba(255, 138, 0, 0.08) 34%, rgba(12, 15, 21, 0.98) 72%),
+    linear-gradient(160deg, #17110b, #0c0f15 72%);
+  box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.38), 0 0 60px rgba(255, 138, 0, 0.25);
+  transform: translateY(-6px);
 }
 
 .media-card {
