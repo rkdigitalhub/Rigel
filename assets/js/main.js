@@ -62,6 +62,86 @@
     }
   }
 
+  var liveTicker = document.querySelector('[data-live-ticker]');
+  if (liveTicker && window.fetch) {
+    var fallbackTickerItems = [
+      { label: 'BTC/USD', value: 62540, change: 2.15 },
+      { label: 'ETH/USD', value: 3465, change: 1.32 },
+      { label: 'SOL/USD', value: 142.6, change: -0.42 },
+      { label: 'BNB/USD', value: 586.4, change: 1.08 }
+    ];
+    var tickerSymbols = [
+      { apiId: 'bitcoin', label: 'BTC/USD' },
+      { apiId: 'ethereum', label: 'ETH/USD' },
+      { apiId: 'solana', label: 'SOL/USD' },
+      { apiId: 'binancecoin', label: 'BNB/USD' }
+    ];
+
+    function formatTickerValue(value) {
+      var amount = Number(value);
+      if (!isFinite(amount)) {
+        return '$0.00';
+      }
+
+      var minimumFractionDigits = amount >= 1000 ? 0 : amount >= 100 ? 2 : 2;
+      var maximumFractionDigits = amount >= 1000 ? 0 : amount >= 100 ? 2 : 2;
+
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: minimumFractionDigits,
+        maximumFractionDigits: maximumFractionDigits
+      }).format(amount);
+    }
+
+    function formatTickerChange(change) {
+      var numericChange = Number(change);
+      var safeChange = isFinite(numericChange) ? numericChange : 0;
+      var className = safeChange >= 0 ? 'up' : 'down';
+      var sign = safeChange >= 0 ? '+' : '';
+
+      return '<span class="' + className + '">' + sign + safeChange.toFixed(2) + '%</span>';
+    }
+
+    function renderTicker(items) {
+      liveTicker.innerHTML = items.map(function (item) {
+        return '<span><b>' + item.label + '</b> ' + formatTickerValue(item.value) + ' ' + formatTickerChange(item.change) + '</span>';
+      }).join('');
+    }
+
+    renderTicker(fallbackTickerItems);
+
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true', {
+      headers: {
+        Accept: 'application/json'
+      }
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('Ticker request failed');
+      }
+
+      return response.json();
+    }).then(function (data) {
+      var liveItems = tickerSymbols.map(function (symbol) {
+        var quote = data[symbol.apiId] || {};
+
+        return {
+          label: symbol.label,
+          value: quote.usd,
+          change: quote.usd_24h_change
+        };
+      }).filter(function (item) {
+        return typeof item.value === 'number' && typeof item.change === 'number';
+      });
+
+      if (liveItems.length === tickerSymbols.length) {
+        renderTicker(liveItems);
+      }
+    }).catch(function () {
+      renderTicker(fallbackTickerItems);
+    });
+  }
+
   var revealNodes = document.querySelectorAll('.reveal');
   if (revealNodes.length) {
     revealNodes.forEach(function (node, index) {
