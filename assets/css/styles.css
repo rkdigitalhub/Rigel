@@ -536,7 +536,7 @@ body[data-page="accounts"][data-account-tier="premiere"] .hero-card::before {
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 30px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 26px),
     var(--account-hero-image) right 0 center / auto 100% no-repeat;
-  opacity: 0.96;
+  opacity: 1;
 }
 
 body[data-page="accounts"][data-account-tier="standard"] .hero-card,
@@ -576,6 +576,32 @@ body[data-page="contact"] .hero-card::before {
 }
 
 body[data-page="contact"] .hero-card::after {
+  display: none;
+}
+
+body[data-page="legal"][data-legal-page="terms"] .hero-card,
+body[data-page="legal"][data-legal-page="privacy"] .hero-card {
+  --asset-label: "";
+}
+
+body[data-page="legal"][data-legal-page="terms"] .hero-card::before {
+  background:
+    linear-gradient(90deg, rgba(8, 10, 15, 0.88) 0%, rgba(8, 10, 15, 0.64) 32%, rgba(8, 10, 15, 0.28) 58%, rgba(8, 10, 15, 0.48) 100%),
+    linear-gradient(180deg, rgba(7, 9, 14, 0.28) 0%, rgba(7, 9, 14, 0.2) 58%, rgba(7, 9, 14, 0.58) 100%),
+    url("../images/terms.jpg") center 56% / cover no-repeat;
+  opacity: 0.78;
+}
+
+body[data-page="legal"][data-legal-page="privacy"] .hero-card::before {
+  background:
+    linear-gradient(90deg, rgba(8, 10, 15, 0.88) 0%, rgba(8, 10, 15, 0.64) 32%, rgba(8, 10, 15, 0.28) 58%, rgba(8, 10, 15, 0.48) 100%),
+    linear-gradient(180deg, rgba(7, 9, 14, 0.28) 0%, rgba(7, 9, 14, 0.2) 58%, rgba(7, 9, 14, 0.58) 100%),
+    url("../images/privacy.jpg") center 56% / cover no-repeat;
+  opacity: 0.78;
+}
+
+body[data-page="legal"][data-legal-page="terms"] .hero-card::after,
+body[data-page="legal"][data-legal-page="privacy"] .hero-card::after {
   display: none;
 }
 
@@ -911,6 +937,87 @@ body:not([data-page="home"]) .section-lined::after {
 
 .grid-image-placeholder.palladium {
   background-image: url("../images/palladium.png");
+}
+
+.grid-image-placeholder.coin-btc {
+  background-image: url("../images/bitcoin.png");
+}
+
+.grid-image-placeholder.coin-eth {
+  background-image: url("../images/etherium.png");
+}
+
+.grid-image-placeholder.coin-ltc {
+  background-image: url("../images/litecoin.png");
+}
+
+.grid-image-placeholder.coin-xrp {
+  background-image: url("../images/ripple.png");
+}
+
+.grid-image-placeholder.coin-ada {
+  background-image: url("../images/cardano.png");
+}
+
+.grid-image-placeholder.coin-doge {
+  background-image: url("../images/dodgecoin.png");
+}
+
+.grid-image-placeholder.coin-btc,
+.grid-image-placeholder.coin-eth,
+.grid-image-placeholder.coin-ltc,
+.grid-image-placeholder.coin-xrp,
+.grid-image-placeholder.coin-ada,
+.grid-image-placeholder.coin-doge {
+  height: 136px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #000;
+}
+
+.currency-cards {
+  justify-items: center;
+}
+
+.currency-cards .card {
+  width: min(100%, 320px);
+}
+
+[data-crypto-metrics] {
+  margin: 0;
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+}
+
+[data-crypto-metrics] .pair-code {
+  display: block;
+  font-weight: 700;
+  color: #d6dce7;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.currency-cards .card h3 {
+  text-align: center;
+}
+
+[data-crypto-metrics] .metric-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-crypto-metrics] [data-spread],
+[data-crypto-metrics] [data-leverage] {
+  font-weight: 800;
+  color: #f2f4f8;
 }
 
 .card.highlight {

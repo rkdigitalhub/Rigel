@@ -65,16 +65,16 @@
   var liveTicker = document.querySelector('[data-live-ticker]');
   if (liveTicker && window.fetch) {
     var fallbackTickerItems = [
+      { label: 'BNB/USD', value: 586.4, change: 1.08 },
       { label: 'BTC/USD', value: 62540, change: 2.15 },
       { label: 'ETH/USD', value: 3465, change: 1.32 },
-      { label: 'SOL/USD', value: 142.6, change: -0.42 },
-      { label: 'BNB/USD', value: 586.4, change: 1.08 }
+      { label: 'SOL/USD', value: 142.6, change: -0.42 }
     ];
     var tickerSymbols = [
+      { apiId: 'binancecoin', label: 'BNB/USD' },
       { apiId: 'bitcoin', label: 'BTC/USD' },
       { apiId: 'ethereum', label: 'ETH/USD' },
-      { apiId: 'solana', label: 'SOL/USD' },
-      { apiId: 'binancecoin', label: 'BNB/USD' }
+      { apiId: 'solana', label: 'SOL/USD' }
     ];
 
     function formatTickerValue(value) {
@@ -83,14 +83,11 @@
         return '$0.00';
       }
 
-      var minimumFractionDigits = amount >= 1000 ? 0 : amount >= 100 ? 2 : 2;
-      var maximumFractionDigits = amount >= 1000 ? 0 : amount >= 100 ? 2 : 2;
-
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: minimumFractionDigits,
-        maximumFractionDigits: maximumFractionDigits
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       }).format(amount);
     }
 
@@ -139,6 +136,155 @@
       }
     }).catch(function () {
       renderTicker(fallbackTickerItems);
+    });
+  }
+
+  var forexTicker = document.querySelector('[data-forex-ticker]');
+  if (forexTicker && window.fetch) {
+    var forexFallback = [
+      { label: 'EUR/USD', value: 1.0850, change: 0.14 },
+      { label: 'GBP/USD', value: 1.2665, change: 0.08 },
+      { label: 'USD/JPY', value: 149.42, change: -0.10 }
+    ];
+
+    function formatForexValue(label, value) {
+      var amount = Number(value);
+      if (!isFinite(amount)) {
+        return '0.00';
+      }
+
+      return amount.toFixed(label === 'USD/JPY' ? 2 : 4);
+    }
+
+    function formatForexChange(change) {
+      var safeChange = isFinite(Number(change)) ? Number(change) : 0;
+      var className = safeChange >= 0 ? 'up' : 'down';
+      var sign = safeChange >= 0 ? '+' : '';
+
+      return '<span class="' + className + '">' + sign + safeChange.toFixed(2) + '%</span>';
+    }
+
+    function renderForexTicker(items) {
+      forexTicker.innerHTML = items.map(function (item) {
+        return '<span><b>' + item.label + '</b> ' + formatForexValue(item.label, item.value) + ' ' + formatForexChange(item.change) + '</span>';
+      }).join('');
+    }
+
+    renderForexTicker(forexFallback);
+
+    function getPrevTradingDate() {
+      var d = new Date();
+      d.setDate(d.getDate() - 1);
+      if (d.getDay() === 0) { d.setDate(d.getDate() - 2); }
+      if (d.getDay() === 6) { d.setDate(d.getDate() - 1); }
+
+      return d.toISOString().split('T')[0];
+    }
+
+    var prevDate = getPrevTradingDate();
+
+    Promise.all([
+      fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY', { headers: { Accept: 'application/json' } }),
+      fetch('https://api.frankfurter.app/' + prevDate + '?from=USD&to=EUR,GBP,JPY', { headers: { Accept: 'application/json' } })
+    ]).then(function (responses) {
+      if (!responses[0].ok || !responses[1].ok) {
+        throw new Error('Forex request failed');
+      }
+
+      return Promise.all([responses[0].json(), responses[1].json()]);
+    }).then(function (data) {
+      var latest = data[0].rates;
+      var prev = data[1].rates;
+
+      if (!latest.EUR || !latest.GBP || !latest.JPY || !prev.EUR || !prev.GBP || !prev.JPY) {
+        throw new Error('Incomplete forex data');
+      }
+
+      var eurUsdNow = 1 / latest.EUR;
+      var gbpUsdNow = 1 / latest.GBP;
+      var usdJpyNow = latest.JPY;
+
+      var eurUsdPrev = 1 / prev.EUR;
+      var gbpUsdPrev = 1 / prev.GBP;
+      var usdJpyPrev = prev.JPY;
+
+      renderForexTicker([
+        { label: 'EUR/USD', value: eurUsdNow, change: ((eurUsdNow - eurUsdPrev) / eurUsdPrev) * 100 },
+        { label: 'GBP/USD', value: gbpUsdNow, change: ((gbpUsdNow - gbpUsdPrev) / gbpUsdPrev) * 100 },
+        { label: 'USD/JPY', value: usdJpyNow, change: ((usdJpyNow - usdJpyPrev) / usdJpyPrev) * 100 }
+      ]);
+    }).catch(function () {
+      renderForexTicker(forexFallback);
+    });
+  }
+
+  var cryptoMetricRows = document.querySelectorAll('[data-crypto-metrics]');
+  if (cryptoMetricRows.length && window.fetch) {
+    function formatSpreadPercent(bid, ask) {
+      var bidPrice = Number(bid);
+      var askPrice = Number(ask);
+      if (!isFinite(bidPrice) || !isFinite(askPrice) || bidPrice <= 0 || askPrice <= 0) {
+        return null;
+      }
+
+      var mid = (bidPrice + askPrice) / 2;
+      if (!isFinite(mid) || mid <= 0) {
+        return null;
+      }
+
+      return (((askPrice - bidPrice) / mid) * 100).toFixed(2) + '%';
+    }
+
+    function formatLeverage(value) {
+      var maxLev = Number(value);
+      if (!isFinite(maxLev) || maxLev <= 0) {
+        return null;
+      }
+
+      return '1:' + Math.round(maxLev);
+    }
+
+    cryptoMetricRows.forEach(function (row) {
+      var symbol = row.getAttribute('data-crypto-symbol');
+      var spreadNode = row.querySelector('[data-spread]');
+      var leverageNode = row.querySelector('[data-leverage]');
+
+      if (!symbol || !spreadNode || !leverageNode) {
+        return;
+      }
+
+      var tickerUrl = 'https://api.bybit.com/v5/market/tickers?category=linear&symbol=' + encodeURIComponent(symbol);
+      var leverageUrl = 'https://api.bybit.com/v5/market/instruments-info?category=linear&symbol=' + encodeURIComponent(symbol);
+
+      Promise.all([
+        fetch(tickerUrl, { headers: { Accept: 'application/json' } }),
+        fetch(leverageUrl, { headers: { Accept: 'application/json' } })
+      ]).then(function (responses) {
+        if (!responses[0].ok || !responses[1].ok) {
+          throw new Error('Crypto metrics request failed');
+        }
+
+        return Promise.all([responses[0].json(), responses[1].json()]);
+      }).then(function (result) {
+        var tickerData = result[0];
+        var leverageData = result[1];
+
+        var tickerItem = tickerData && tickerData.result && tickerData.result.list && tickerData.result.list[0];
+        var leverageItem = leverageData && leverageData.result && leverageData.result.list && leverageData.result.list[0];
+
+        var spreadText = tickerItem ? formatSpreadPercent(tickerItem.bid1Price, tickerItem.ask1Price) : null;
+        var leverageText = leverageItem && leverageItem.leverageFilter ? formatLeverage(leverageItem.leverageFilter.maxLeverage) : null;
+
+        if (spreadText) {
+          spreadNode.textContent = spreadText;
+        }
+
+        if (leverageText) {
+          leverageNode.textContent = leverageText;
+        }
+      }).catch(function () {
+        // Keep existing fallback values in markup if the API is unavailable.
+      });
     });
   }
 
